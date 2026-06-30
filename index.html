@@ -64,11 +64,20 @@
   .url { margin-top:24px; font-weight:600; font-size:25px; letter-spacing:.3px; color:#aab0b8; }
   .url b { color:#fff; }
 
-  /* ---- Print: exactly one US-Letter page, no toolbar ---- */
+  /* ---- Print: force exactly ONE US-Letter page, no toolbar ----
+     Use `zoom` (which shrinks the real layout box) instead of `transform`
+     (which only scales visually, so the engine still paginates the full
+     1650px height — that was the 2-page bug). break-inside:avoid tells the
+     print engine never to split the flyer. zoom 0.635 -> ~8.4x10.9in, a hair
+     under Letter so default printer margins can't tip it onto page 2. */
   @media print {
+    html, body { background:#fff !important; }
     .toolbar { display:none !important; }
-    .holder { width:816px !important; height:1056px !important; margin:0 !important; }
-    .flyer { transform:scale(0.64) !important; transform-origin:top left !important; box-shadow:none !important; }
+    .holder { width:auto !important; height:auto !important; margin:0 auto !important; overflow:hidden; }
+    .flyer {
+      transform:none !important; zoom:0.635; box-shadow:none !important;
+      page-break-inside:avoid; break-inside:avoid;
+    }
   }
 </style></head>
 <body>
